@@ -78,7 +78,7 @@ PlasmoidItem {
         id: fullRoot
         focus: true
 
-        readonly property double iwSize: units.gridUnit * 12.6 // item width
+        readonly property double iwSize: Kirigami.Units.gridUnit * 12.6 // item width
 
         property int currentIndex: -1
 

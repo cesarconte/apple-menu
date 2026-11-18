@@ -59,7 +59,7 @@ Item {
             verticalAlignment: Text.AlignVCenter
             color: item.highlighted ? Kirigami.Theme.highlightedTextColor : Kirigami.Theme.textColor
             elide: Text.ElideRight
-            font.pixelSize: Kirigami.Theme.defaultFontSize
+            font: Kirigami.Theme.defaultFont
         }
 
         Label {
@@ -71,7 +71,7 @@ Item {
             color: item.highlighted 
                    ? Kirigami.Theme.highlightedTextColor 
                    : Kirigami.Theme.disabledTextColor
-            font.pixelSize: Kirigami.Theme.smallFont.pixelSize
+            font: Kirigami.Theme.smallFont
             opacity: item.highlighted ? 1.0 : 0.8
         }
     }
