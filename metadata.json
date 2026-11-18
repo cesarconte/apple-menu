@@ -1,0 +1,31 @@
+{
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "adolfo@librepixels.com",
+                "Name": "zayronxio"
+            },
+            {
+                "Name": "Cesar Conte",
+                "Website": "https://github.com/cesarconte"
+            }
+        ],
+        "Name": "Apple Menu",
+        "Name[es]": "Menú Apple",
+        "Name[zh_CN]": "Apple菜单",
+        "Name[zh_TW]": "Apple菜單",
+        "Id": "org.kpple.kppleMenu",
+        "Description": "The Apple menu is a drop-down menu that is usually found on the left side of the menu bar.",
+        "Category": "Application Launchers",
+        "Icon": "start-here-kde",
+        "EnabledByDefault": true,
+        "License": "GPL-2.0",
+        "ServiceTypes": [
+            "Plasma/Applet"
+        ],
+        "Version": "1.7.0",
+        "Website": "https://github.com/cesarconte/apple-menu"
+    },
+    "X-Plasma-API-Minimum-Version": "6.0",
+    "X-Plasma-MainScript": "ui/main.qml"
+}

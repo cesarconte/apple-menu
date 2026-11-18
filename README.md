@@ -1,39 +1,42 @@
-# Kpple Menu
+# Apple Menu for KDE Plasma 6
 
-<p align="center">
-    <img src="screenshots/kpple_banner.png" alt="banner">
-</p>
+A macOS-style Apple Menu applet for KDE Plasma 6.
 
-## Previews
+![Screenshot](screenshots/screenshot.png)
 
-<p align="center">
-    <img src="screenshots/light_kppleMenu.png" alt="light preview"> <img src="screenshots/dark_kppleMenu.png" alt="dark preview">
-</p>
+## Features
 
-## How to install the Kpple menu without Kpple OS on KDE Plasma ?
+- **macOS Apple Menu Experience**: Clean, native dropdown menu for system actions.
+- **Full Keyboard Navigation**: Navigate menu items smoothly with arrow keys (`Up` / `Down`), `Home`, `End`, `Enter` / `Return` / `Space` to activate, and `Escape` to dismiss.
+- **Shelly-UI App Store**: Opens **Shelly-UI** (`shelly-ui`) out of the box when clicking on *App Store...*.
+- **Native KDE Plasma 6 Session Controls**: Reliable integration with Plasma 6 session management (Suspend, Reboot, Shutdown, Lock Screen, and Log Out) without requiring root permissions, functioning seamlessly under Wayland and X11.
+- **Native KWin Force Quit**: Uses KWin's native `killWindow` action across Wayland and X11.
+- **Customizable**: Configurable icons, custom button image, and custom command overrides if desired.
 
-The recommended installation method is via the KDE store.
+## Installation
 
-#### You can also use another install method ( by git ) :
+### From Source
 
-Open a terminal and follow the steps below.
+Clone into your local Plasma applets directory:
 
 ```bash
-
-git clone https://github.com/kppleos/org.kpple.kppleMenu.git
-mv org.kpple.kppleMenu/package/* org.kpple.kppleMenu/
-rm org.kpple.kppleMenu/package/
-mv org.kpple.kppleMenu/ ~/.local/share/plasma/plasmoids/org.kpple.kppleMenu 
-
+git clone https://github.com/cesarconte/apple-menu.git ~/.local/share/plasma/plasmoids/org.kpple.kppleMenu
 ```
 
-## Donate
+Or if you have the repository in another folder (e.g. `~/Proyectos/apple-menu`), you can symlink it:
 
-If you like my projects and you want to support me, you can donate at:
+```bash
+ln -s ~/Proyectos/apple-menu ~/.local/share/plasma/plasmoids/org.kpple.kppleMenu
+```
 
-<span class="paypal"><a href="https://www.paypal.me/borgnietrudy" title="Donate to this project using Paypal"><img src="https://www.paypalobjects.com/webstatic/mktg/Logo/pp-logo-100px.png" alt="PayPal donate button" /></a></span>
+Restart Plasma Shell to load changes:
+
+```bash
+plasmashell --replace &
+# or on systemd-managed Plasma:
+systemctl --user restart plasma-plasmashell.service
+```
 
 ## License
 
-GNU GPL v2.0
-
+GNU General Public License v2.0
