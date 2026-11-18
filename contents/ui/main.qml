@@ -58,15 +58,12 @@ PlasmoidItem {
     Connections {
         target: root
         function onExpandedChanged() {
-            if (root.expanded) {
-                if (fullRoot) {
-                    fullRoot.forceActiveFocus();
-                    fullRoot.currentIndex = -1;
+            var rep = root.fullRepresentationItem;
+            if (rep) {
+                if (root.expanded) {
+                    rep.forceActiveFocus();
                 }
-            } else {
-                if (fullRoot) {
-                    fullRoot.currentIndex = -1;
-                }
+                rep.currentIndex = -1;
             }
         }
     }
@@ -81,6 +78,12 @@ PlasmoidItem {
         readonly property double iwSize: Kirigami.Units.gridUnit * 12.6 // item width
 
         property int currentIndex: -1
+
+        Component.onCompleted: {
+            if (root.expanded) {
+                forceActiveFocus();
+            }
+        }
 
         readonly property var menuItems: [
             aboutThisComputerItem,
