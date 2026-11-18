@@ -44,7 +44,7 @@ PlasmaCore.Dialog {
         Text {
             id: hei
             text: "prueba"
-            font.pixelSize: Kirigami.Theme.defaultFontSize
+            font: Kirigami.Theme.defaultFont
             visible: false
         }
         ListView {
@@ -65,14 +65,14 @@ PlasmaCore.Dialog {
                         width: parent.width/2
                         text: model.name + ": "
                         color: Kirigami.Theme.textColor
-                        font.pixelSize: Kirigami.Theme.defaultFontSize
+                        font: Kirigami.Theme.defaultFont
                         horizontalAlignment: Text.AlignRight
                     }
                     Text {
                         id: valueModel
                         width: parent.width/2
                         text: model.value
-                        font.pixelSize: Kirigami.Theme.defaultFontSize
+                        font: Kirigami.Theme.defaultFont
                         color: Kirigami.Theme.textColor
                         wrapMode: Text.Wrap // Permite el salto de línea automático
                         elide: Text.ElideNone

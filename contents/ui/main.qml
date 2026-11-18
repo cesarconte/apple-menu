@@ -32,7 +32,7 @@ PlasmoidItem {
         engine: "executable"
         connectedSources: []
         property var callbacks: ({})
-        onNewData: {
+        onNewData: (sourceName, data) => {
             var stdout = data["stdout"]
 
             if (callbacks[sourceName] !== undefined) {
@@ -186,41 +186,33 @@ PlasmoidItem {
             }
         }
 
-        Keys.onDownPressed: (event) => {
-            if (currentIndex < 0 || currentIndex >= menuItems.length - 1) {
+        Keys.onPressed: (event) => {
+            if (event.key === Qt.Key_Down) {
+                if (currentIndex < 0 || currentIndex >= menuItems.length - 1) {
+                    currentIndex = 0;
+                } else {
+                    currentIndex++;
+                }
+                event.accepted = true;
+            } else if (event.key === Qt.Key_Up) {
+                if (currentIndex <= 0) {
+                    currentIndex = menuItems.length - 1;
+                } else {
+                    currentIndex--;
+                }
+                event.accepted = true;
+            } else if (event.key === Qt.Key_Home) {
                 currentIndex = 0;
-            } else {
-                currentIndex++;
-            }
-            event.accepted = true;
-        }
-
-        Keys.onUpPressed: (event) => {
-            if (currentIndex <= 0) {
+                event.accepted = true;
+            } else if (event.key === Qt.Key_End) {
                 currentIndex = menuItems.length - 1;
-            } else {
-                currentIndex--;
+                event.accepted = true;
+            } else if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter || event.key === Qt.Key_Space) {
+                triggerCurrent(event);
+            } else if (event.key === Qt.Key_Escape) {
+                root.expanded = false;
+                event.accepted = true;
             }
-            event.accepted = true;
-        }
-
-        Keys.onHomePressed: (event) => {
-            currentIndex = 0;
-            event.accepted = true;
-        }
-
-        Keys.onEndPressed: (event) => {
-            currentIndex = menuItems.length - 1;
-            event.accepted = true;
-        }
-
-        Keys.onReturnPressed: (event) => triggerCurrent(event)
-        Keys.onEnterPressed: (event) => triggerCurrent(event)
-        Keys.onSpacePressed: (event) => triggerCurrent(event)
-
-        Keys.onEscapePressed: (event) => {
-            root.expanded = false;
-            event.accepted = true;
         }
 
         ColumnLayout {

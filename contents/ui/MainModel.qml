@@ -36,7 +36,7 @@ Item {
         id: executable
         engine: "executable"
         connectedSources: []
-        onNewData: {
+        onNewData: (sourceName, data) => {
             var exitCode = data["exit code"]
             var exitStatus = data["exit status"]
             var stdout = data["stdout"]
@@ -56,7 +56,7 @@ Item {
 
     Connections {
         target: executable
-        onExited: {
+        function onExited(cmd, exitCode, exitStatus, stdout, stderr) {
             if (!proceExe) {
                 if (stdout.trim() !== "") {
                     values.push(stdout.trim());
