@@ -4,19 +4,18 @@
  *  SPDX-License-Identifier: GPL-2.0-or-later
  */
 
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
-import QtQuick.Dialogs
+import QtQuick
+import QtQuick.Controls as QQC2
+import QtQuick.Layouts
 
-import org.kde.plasma.components 3.0 as PlasmaComponents3
 import org.kde.plasma.core as PlasmaCore
-import org.kde.draganddrop 2.0 as DragDrop
-import org.kde.kirigami 2.20 as Kirigami
-import org.kde.ksvg 1.0 as KSvg
-import org.kde.plasma.plasmoid 2.0
+import org.kde.draganddrop as DragDrop
+import org.kde.kirigami as Kirigami
+import org.kde.ksvg as KSvg
+import org.kde.plasma.plasmoid
 import org.kde.kcmutils as KCM
 import org.kde.iconthemes as KIconThemes
+import CachyOS.UI
 
 KCM.SimpleKCM {
     id: configGeneral
@@ -45,7 +44,7 @@ KCM.SimpleKCM {
             implicitWidth: iconButton.implicitWidth
             implicitHeight: iconButton.implicitHeight
 
-            Button {
+            QQC2.Button {
                 id: iconButton
                 anchors.fill: parent
 
@@ -86,11 +85,11 @@ KCM.SimpleKCM {
                     id: iconDialog
 
                     function setCustomButtonImage(image) {
-                        configGeneral.cfg_customButtonImage = image || configGeneral.cfg_icon || "start-here-kde"
+                        configGeneral.cfg_customButtonImage = image || configGeneral.cfg_icon || "start-here-kde";
                         configGeneral.cfg_useCustomButtonImage = true;
                     }
 
-                    onIconNameChanged: setCustomButtonImage(iconName);
+                    onIconNameChanged: setCustomButtonImage(iconName)
                 }
 
                 KSvg.FrameSvgItem {
@@ -109,20 +108,20 @@ KCM.SimpleKCM {
                     }
                 }
 
-                Menu {
+                CachyMenu {
                     id: iconMenu
-                    y: +parent.height
+                    y: iconButton.height
 
-                    onClosed: iconButton.checked = false;
+                    onClosed: iconButton.checked = false
 
-                    MenuItem {
+                    CachyMenuItem {
                         text: i18nc("@item:inmenu Open icon chooser dialog", "Choose…")
-                        icon.name: "document-open-folder"
+                        iconName: "document-open-folder"
                         onClicked: iconDialog.open()
                     }
-                    MenuItem {
+                    CachyMenuItem {
                         text: i18nc("@item:inmenu Reset icon to default", "Clear Icon")
-                        icon.name: "edit-clear"
+                        iconName: "edit-clear"
                         onClicked: {
                             configGeneral.cfg_icon = "start-here-kde";
                             configGeneral.cfg_useCustomButtonImage = false;
@@ -138,81 +137,101 @@ KCM.SimpleKCM {
             Kirigami.FormData.label: i18n("Commands & Behavior")
         }
 
-        CheckBox {
+        CachySwitch {
             id: showAdvancedMode
             Kirigami.FormData.label: i18n("Custom commands:")
             text: i18n("Enable custom commands (expert mode)")
         }
 
-        Label {
+        Text {
             visible: showAdvancedMode.checked
             wrapMode: Text.WordWrap
+            Layout.fillWidth: true
+            Layout.minimumWidth: 0
             text: i18n("Warning: By default, the menu uses native Plasma 6 session and KWin DBus interfaces. Only override if you need specific commands.")
-            color: Kirigami.Theme.neutralTextColor
-            font: Kirigami.Theme.smallFont
+            color: CachyPalette.textSecondary
+            font.pixelSize: 11
         }
 
-        TextField {
+        CachyTextField {
             id: appStoreSettings
             Kirigami.FormData.label: i18n("App Store:")
             placeholderText: "shelly-ui"
             visible: showAdvancedMode.checked
+            Layout.fillWidth: true
+            Layout.minimumWidth: 0
         }
 
-        TextField {
+        CachyTextField {
             id: systemPreferencesSettings
             Kirigami.FormData.label: i18n("System Preferences:")
             placeholderText: "systemsettings"
             visible: showAdvancedMode.checked
+            Layout.fillWidth: true
+            Layout.minimumWidth: 0
         }
 
-        TextField {
+        CachyTextField {
             id: aboutThisComputerSettings
             Kirigami.FormData.label: i18n("About This Computer:")
             placeholderText: "kinfocenter"
             visible: showAdvancedMode.checked
+            Layout.fillWidth: true
+            Layout.minimumWidth: 0
         }
 
-        TextField {
+        CachyTextField {
             id: forceQuitSettings
             Kirigami.FormData.label: i18n("Force Quit:")
             placeholderText: "qdbus6 org.kde.KWin /KWin killWindow"
             visible: showAdvancedMode.checked
+            Layout.fillWidth: true
+            Layout.minimumWidth: 0
         }
 
-        TextField {
+        CachyTextField {
             id: sleepSettings
             Kirigami.FormData.label: i18n("Sleep:")
             placeholderText: "systemctl suspend"
             visible: showAdvancedMode.checked
+            Layout.fillWidth: true
+            Layout.minimumWidth: 0
         }
 
-        TextField {
+        CachyTextField {
             id: restartSettings
             Kirigami.FormData.label: i18n("Restart:")
             placeholderText: "/sbin/reboot"
             visible: showAdvancedMode.checked
+            Layout.fillWidth: true
+            Layout.minimumWidth: 0
         }
 
-        TextField {
+        CachyTextField {
             id: shutDownSettings
             Kirigami.FormData.label: i18n("Shut Down:")
             placeholderText: "/sbin/shutdown now"
             visible: showAdvancedMode.checked
+            Layout.fillWidth: true
+            Layout.minimumWidth: 0
         }
 
-        TextField {
+        CachyTextField {
             id: lockScreenSettings
             Kirigami.FormData.label: i18n("Lock Screen:")
             placeholderText: "loginctl lock-session"
             visible: showAdvancedMode.checked
+            Layout.fillWidth: true
+            Layout.minimumWidth: 0
         }
 
-        TextField {
+        CachyTextField {
             id: logOutSettings
             Kirigami.FormData.label: i18n("Log Out:")
             placeholderText: "qdbus6 org.kde.Shutdown /Shutdown org.kde.Shutdown.logout"
             visible: showAdvancedMode.checked
+            Layout.fillWidth: true
+            Layout.minimumWidth: 0
         }
     }
 }

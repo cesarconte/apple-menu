@@ -8,12 +8,10 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import org.kde.plasma.plasmoid
-import org.kde.plasma.core as PlasmaCore
-import org.kde.plasma.components 3.0 as PlasmaComponents3
 import org.kde.plasma.plasma5support as Plasma5Support
 import org.kde.kcmutils // KCMLauncher
-import org.kde.kirigami as Kirigami
 import org.kde.plasma.private.sessions as Sessions
+import CachyOS.UI
 
 PlasmoidItem {
     id: root
@@ -26,21 +24,21 @@ PlasmoidItem {
         id: sessionsModel
     }
 
-    // define exec system ( call commands )
+    // define exec system (call commands)
     Plasma5Support.DataSource {
         id: executable
         engine: "executable"
         connectedSources: []
         property var callbacks: ({})
         onNewData: (sourceName, data) => {
-            var stdout = data["stdout"]
+            var stdout = data["stdout"];
 
             if (callbacks[sourceName] !== undefined) {
                 callbacks[sourceName](stdout);
             }
 
-            exited(sourceName, stdout)
-            disconnectSource(sourceName) // exec finished
+            exited(sourceName, stdout);
+            disconnectSource(sourceName); // exec finished
         }
 
         function exec(cmd, onNewDataCallback) {
@@ -48,9 +46,9 @@ PlasmoidItem {
                 return;
             }
             if (onNewDataCallback !== undefined) {
-                callbacks[cmd] = onNewDataCallback
+                callbacks[cmd] = onNewDataCallback;
             }
-            connectSource(cmd)
+            connectSource(cmd);
         }
         signal exited(string sourceName, string stdout)
     }
@@ -75,8 +73,6 @@ PlasmoidItem {
         id: fullRoot
         focus: true
 
-        readonly property double iwSize: Kirigami.Units.gridUnit * 12.6 // item width
-
         property int currentIndex: -1
 
         Component.onCompleted: {
@@ -97,7 +93,7 @@ PlasmoidItem {
             logOutItem
         ]
 
-        Layout.preferredWidth: 215
+        Layout.preferredWidth: 220
         Layout.preferredHeight: columnLayout.implicitHeight + 8
         implicitWidth: Layout.preferredWidth
         implicitHeight: Layout.preferredHeight
@@ -116,19 +112,21 @@ PlasmoidItem {
 
             switch (actionName) {
                 case "about":
-                    soInfo.visible = true;
+                    soInfo.show();
+                    soInfo.raise();
+                    soInfo.requestActivate();
                     break;
 
                 case "preferences":
-                    if (plasmoid.configuration.showAdvancedMode && plasmoid.configuration.systemPreferencesSettings && plasmoid.configuration.systemPreferencesSettings.trim() !== "") {
-                        executable.exec(plasmoid.configuration.systemPreferencesSettings);
+                    if (Plasmoid.configuration.showAdvancedMode && Plasmoid.configuration.systemPreferencesSettings && Plasmoid.configuration.systemPreferencesSettings.trim() !== "") {
+                        executable.exec(Plasmoid.configuration.systemPreferencesSettings);
                     } else {
                         KCMLauncher.openSystemSettings("");
                     }
                     break;
 
                 case "appstore":
-                    var appCmd = plasmoid.configuration.appStoreSettings;
+                    var appCmd = Plasmoid.configuration.appStoreSettings;
                     if (!appCmd || appCmd.trim() === "" || appCmd === "plasma-discover") {
                         appCmd = "shelly-ui";
                     }
@@ -136,16 +134,16 @@ PlasmoidItem {
                     break;
 
                 case "forcequit":
-                    if (plasmoid.configuration.showAdvancedMode && plasmoid.configuration.forceQuitSettings && plasmoid.configuration.forceQuitSettings.trim() !== "" && plasmoid.configuration.forceQuitSettings !== "xkill") {
-                        executable.exec(plasmoid.configuration.forceQuitSettings);
+                    if (Plasmoid.configuration.showAdvancedMode && Plasmoid.configuration.forceQuitSettings && Plasmoid.configuration.forceQuitSettings.trim() !== "" && plasmoid.configuration.forceQuitSettings !== "xkill") {
+                        executable.exec(Plasmoid.configuration.forceQuitSettings);
                     } else {
                         executable.exec("qdbus6 org.kde.KWin /KWin killWindow || busctl --user call org.kde.KWin /KWin org.kde.KWin killWindow");
                     }
                     break;
 
                 case "sleep":
-                    if (plasmoid.configuration.showAdvancedMode && plasmoid.configuration.sleepSettings && plasmoid.configuration.sleepSettings.trim() !== "" && plasmoid.configuration.sleepSettings !== "systemctl suspend") {
-                        executable.exec(plasmoid.configuration.sleepSettings);
+                    if (Plasmoid.configuration.showAdvancedMode && Plasmoid.configuration.sleepSettings && Plasmoid.configuration.sleepSettings.trim() !== "" && plasmoid.configuration.sleepSettings !== "systemctl suspend") {
+                        executable.exec(Plasmoid.configuration.sleepSettings);
                     } else {
                         if (sm.canSuspend) {
                             sm.suspend();
@@ -156,32 +154,32 @@ PlasmoidItem {
                     break;
 
                 case "restart":
-                    if (plasmoid.configuration.showAdvancedMode && plasmoid.configuration.restartSettings && plasmoid.configuration.restartSettings.trim() !== "" && plasmoid.configuration.restartSettings !== "/sbin/reboot") {
-                        executable.exec(plasmoid.configuration.restartSettings);
+                    if (Plasmoid.configuration.showAdvancedMode && Plasmoid.configuration.restartSettings && Plasmoid.configuration.restartSettings.trim() !== "" && plasmoid.configuration.restartSettings !== "/sbin/reboot") {
+                        executable.exec(Plasmoid.configuration.restartSettings);
                     } else {
                         sm.requestReboot();
                     }
                     break;
 
                 case "shutdown":
-                    if (plasmoid.configuration.showAdvancedMode && plasmoid.configuration.shutDownSettings && plasmoid.configuration.shutDownSettings.trim() !== "" && plasmoid.configuration.shutDownSettings !== "/sbin/shutdown now") {
-                        executable.exec(plasmoid.configuration.shutDownSettings);
+                    if (Plasmoid.configuration.showAdvancedMode && Plasmoid.configuration.shutDownSettings && Plasmoid.configuration.shutDownSettings.trim() !== "" && plasmoid.configuration.shutDownSettings !== "/sbin/shutdown now") {
+                        executable.exec(Plasmoid.configuration.shutDownSettings);
                     } else {
                         sm.requestShutdown();
                     }
                     break;
 
                 case "lock":
-                    if (plasmoid.configuration.showAdvancedMode && plasmoid.configuration.lockScreenSettings && plasmoid.configuration.lockScreenSettings.trim() !== "" && plasmoid.configuration.lockScreenSettings !== "qdbus org.freedesktop.ScreenSaver /ScreenSaver Lock") {
-                        executable.exec(plasmoid.configuration.lockScreenSettings);
+                    if (Plasmoid.configuration.showAdvancedMode && Plasmoid.configuration.lockScreenSettings && Plasmoid.configuration.lockScreenSettings.trim() !== "" && plasmoid.configuration.lockScreenSettings !== "qdbus org.freedesktop.ScreenSaver /ScreenSaver Lock") {
+                        executable.exec(Plasmoid.configuration.lockScreenSettings);
                     } else {
                         sm.lock();
                     }
                     break;
 
                 case "logout":
-                    if (plasmoid.configuration.showAdvancedMode && plasmoid.configuration.logOutSettings && plasmoid.configuration.logOutSettings.trim() !== "" && plasmoid.configuration.logOutSettings !== "qdbus org.kde.ksmserver /KSMServer logout 0 0 0") {
-                        executable.exec(plasmoid.configuration.logOutSettings);
+                    if (Plasmoid.configuration.showAdvancedMode && Plasmoid.configuration.logOutSettings && Plasmoid.configuration.logOutSettings.trim() !== "" && plasmoid.configuration.logOutSettings !== "qdbus org.kde.ksmserver /KSMServer logout 0 0 0") {
+                        executable.exec(Plasmoid.configuration.logOutSettings);
                     } else {
                         sm.requestLogout();
                     }
@@ -232,17 +230,8 @@ PlasmoidItem {
                 onClicked: fullRoot.triggerAction("about")
             }
 
-            MenuSeparator {
-                id: s1
+            CachyMenuSeparator {
                 Layout.fillWidth: true
-                padding: 0
-                topPadding: 3
-                bottomPadding: 3
-                contentItem: Rectangle {
-                    implicitWidth: fullRoot.iwSize
-                    implicitHeight: 1
-                    color: Qt.rgba(Kirigami.Theme.textColor.r, Kirigami.Theme.textColor.g, Kirigami.Theme.textColor.b, 0.15)
-                }
             }
 
             ListDelegate {
@@ -261,17 +250,8 @@ PlasmoidItem {
                 onClicked: fullRoot.triggerAction("appstore")
             }
 
-            MenuSeparator {
-                id: s2
+            CachyMenuSeparator {
                 Layout.fillWidth: true
-                padding: 0
-                topPadding: 3
-                bottomPadding: 3
-                contentItem: Rectangle {
-                    implicitWidth: fullRoot.iwSize
-                    implicitHeight: 1
-                    color: Qt.rgba(Kirigami.Theme.textColor.r, Kirigami.Theme.textColor.g, Kirigami.Theme.textColor.b, 0.15)
-                }
             }
 
             ListDelegate {
@@ -283,17 +263,8 @@ PlasmoidItem {
                 onClicked: fullRoot.triggerAction("forcequit")
             }
 
-            MenuSeparator {
-                id: s3
+            CachyMenuSeparator {
                 Layout.fillWidth: true
-                padding: 0
-                topPadding: 3
-                bottomPadding: 3
-                contentItem: Rectangle {
-                    implicitWidth: fullRoot.iwSize
-                    implicitHeight: 1
-                    color: Qt.rgba(Kirigami.Theme.textColor.r, Kirigami.Theme.textColor.g, Kirigami.Theme.textColor.b, 0.15)
-                }
             }
 
             ListDelegate {
@@ -320,17 +291,8 @@ PlasmoidItem {
                 onClicked: fullRoot.triggerAction("shutdown")
             }
 
-            MenuSeparator {
-                id: s4
+            CachyMenuSeparator {
                 Layout.fillWidth: true
-                padding: 0
-                topPadding: 3
-                bottomPadding: 3
-                contentItem: Rectangle {
-                    implicitWidth: fullRoot.iwSize
-                    implicitHeight: 1
-                    color: Qt.rgba(Kirigami.Theme.textColor.r, Kirigami.Theme.textColor.g, Kirigami.Theme.textColor.b, 0.15)
-                }
             }
 
             ListDelegate {
@@ -355,8 +317,14 @@ PlasmoidItem {
 
     SoInfo {
         id: soInfo
-        visible: false
+        onMoreInfoRequested: {
+            if (Plasmoid.configuration.showAdvancedMode && Plasmoid.configuration.aboutThisComputerSettings && Plasmoid.configuration.aboutThisComputerSettings.trim() !== "") {
+                executable.exec(Plasmoid.configuration.aboutThisComputerSettings);
+            } else {
+                KCMLauncher.openSystemSettings("kcm_about-distro");
+            }
+        }
     }
 
-    Plasmoid.icon: plasmoid.configuration.useCustomButtonImage ? plasmoid.configuration.customButtonImage : plasmoid.configuration.icon
+    Plasmoid.icon: Plasmoid.configuration.useCustomButtonImage && Plasmoid.configuration.customButtonImage ? Plasmoid.configuration.customButtonImage : Plasmoid.configuration.icon
 }

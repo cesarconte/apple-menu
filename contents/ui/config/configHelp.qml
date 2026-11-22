@@ -1,125 +1,93 @@
 /*
- *  Copyright 2020 Kpple <info.kpple@gmail.com>
- *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  2.010-1301, USA.
+ *  SPDX-FileCopyrightText: 2020 Kpple <info.kpple@gmail.com>
+ *  SPDX-FileCopyrightText: 2026 Cesar Conte
+ *  SPDX-License-Identifier: GPL-2.0-or-later
  */
 
-import QtQuick 2.2
-import QtQuick.Controls 2.1
-import QtQuick.Layouts 1.1
+import QtQuick
+import QtQuick.Controls as QQC2
+import QtQuick.Layouts
+import org.kde.kirigami as Kirigami
+import org.kde.kcmutils as KCM
+import CachyOS.UI
 
-import org.kde.kirigami 2.4 as Kirigami
+KCM.SimpleKCM {
+    id: configHelp
 
-Item {
-    id: page
-    width: childrenRect.width
-    height: childrenRect.height
-    
-    // Rect button size
-    readonly property double wRectSize: 400
-    readonly property double hRectSize: 35
-
-    Kirigami.FormLayout {
-        anchors.right: parent.right
+    ColumnLayout {
         anchors.left: parent.left
-        
-        // load local Kpple banner
+        anchors.right: parent.right
+        spacing: CachyTheme.spacingLarge
+
         Image {
+            Layout.alignment: Qt.AlignHCenter
+            Layout.preferredWidth: Math.min(parent.width, 400)
             fillMode: Image.PreserveAspectFit
             source: "images/kpple_banner.png"
         }
-        
-        Column {
-            anchors.horizontalCenter: parent.horizontalCenter
-            spacing: 5
-            
-            Text {
-                font.underline : true
-                text: i18n("Do you need help ?")
+
+        ColumnLayout {
+            Layout.alignment: Qt.AlignHCenter
+            Layout.preferredWidth: Math.min(parent.width, 360)
+            spacing: CachyTheme.spacingSmall
+
+            CachyHeading {
+                Layout.fillWidth: true
+                Layout.minimumWidth: 0
+                horizontalAlignment: Text.AlignHCenter
+                text: i18n("Apple Menu for CachyOS")
+                level: 2
             }
 
-            Rectangle { 
-                color: "lightblue"
-                radius: 5
-                width: wRectSize
-                height: hRectSize
-                Text { 
-                    anchors.centerIn: parent
-                    text: i18n("About Kpple") 
-                } 
-                MouseArea {
-                    anchors.fill: parent
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: Qt.openUrlExternally("https://github.com/kppleos/Users-Guide");
-                }
-            }
-            
-            Rectangle { 
-                color: "gold"
-                radius: 5
-                width: wRectSize
-                height: hRectSize
-                Text { 
-                    anchors.centerIn: parent
-                    text: i18n("Consult the user's guide") 
-                } 
-                MouseArea {
-                    anchors.fill: parent
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: Qt.openUrlExternally("https://github.com/kppleos/Users-Guide");
-                }
-            }
-            
-            Rectangle { 
-                color: "lightgreen"
-                radius: 5
-                width: wRectSize
-                height: hRectSize
-                Text { 
-                    anchors.centerIn: parent
-                    text: i18n("Repport a bug") 
-                } 
-                MouseArea {
-                    anchors.fill: parent
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: Qt.openUrlExternally("https://github.com/kppleos/org.kpple.kppleMenu/issues");
-                }
-            }
-            
-            Rectangle { 
-                color: "grey"
-                radius: 5
-                width: wRectSize
-                height: hRectSize
-                Text { 
-                    anchors.centerIn: parent
-                    text: i18n("Donate for the project") 
-                } 
-                MouseArea {
-                    anchors.fill: parent
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: Qt.openUrlExternally("https://www.paypal.me/borgnietrudy");
-                }
+            Text {
+                Layout.fillWidth: true
+                Layout.minimumWidth: 0
+                horizontalAlignment: Text.AlignHCenter
+                text: i18n("macOS 27 Golden Gate Liquid Glass Menu for KDE Plasma 6")
+                color: CachyPalette.textSecondary
+                font.pixelSize: 12
+                wrapMode: Text.WordWrap
             }
         }
-        
+
+        ColumnLayout {
+            Layout.alignment: Qt.AlignHCenter
+            Layout.preferredWidth: Math.min(parent.width, 320)
+            spacing: CachyTheme.spacingSmall
+
+            CachyButton {
+                Layout.fillWidth: true
+                pillStyle: true
+                iconName: "help-about"
+                text: i18n("Consult the User's Guide")
+                onClicked: Qt.openUrlExternally("https://github.com/cesarconte/apple-menu")
+            }
+
+            CachyButton {
+                Layout.fillWidth: true
+                pillStyle: true
+                iconName: "tools-report-bug"
+                text: i18n("Report an Issue")
+                onClicked: Qt.openUrlExternally("https://github.com/cesarconte/apple-menu/issues")
+            }
+
+            CachyButton {
+                Layout.fillWidth: true
+                pillStyle: true
+                iconName: "help-donate"
+                text: i18n("Support Development")
+                onClicked: Qt.openUrlExternally("https://github.com/cesarconte/apple-menu")
+            }
+        }
+
         Text {
-            text: i18n("Couldn't find help ? Contact us at : info.kpple@gmail.com")
+            Layout.fillWidth: true
+            Layout.minimumWidth: 0
+            horizontalAlignment: Text.AlignHCenter
+            text: i18n("Designed and maintained for CachyOS and KDE Plasma 6.")
+            font.pixelSize: 11
+            color: CachyPalette.textMuted
+            wrapMode: Text.WordWrap
         }
     }
 }
-
- 
- 

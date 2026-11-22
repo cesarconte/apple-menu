@@ -6,8 +6,7 @@
 
 import QtQuick
 import QtQuick.Layouts
-import QtQuick.Controls
-import org.kde.kirigami as Kirigami
+import CachyOS.UI
 
 Item {
     id: item
@@ -18,61 +17,80 @@ Item {
     property bool isCurrent: false
     property alias text: label.text
     property string shortcutText: ""
-    property alias containsMouse: area.containsMouse
-
-    readonly property bool highlighted: isCurrent || area.containsMouse
+    readonly property bool containsMouse: hoverHandler.hovered
+    readonly property bool highlighted: isCurrent || containsMouse
 
     Layout.fillWidth: true
-    implicitHeight: 26
+    implicitHeight: 28
     height: implicitHeight
+
+    scale: tapHandler.pressed ? 0.98 : 1.0
+
+    Behavior on scale {
+        NumberAnimation {
+            duration: CachyTheme.animFast
+            easing.type: Easing.OutCubic
+        }
+    }
 
     Rectangle {
         id: highlightRect
         anchors.fill: parent
-        anchors.leftMargin: 4
-        anchors.rightMargin: 4
+        anchors.leftMargin: 6
+        anchors.rightMargin: 6
         anchors.topMargin: 1
         anchors.bottomMargin: 1
-        radius: 4
-        color: item.highlighted ? Kirigami.Theme.highlightColor : "transparent"
+        radius: CachyTheme.radiusSmall
+        color: item.highlighted ? CachyTheme.accentColor : "transparent"
         visible: item.highlighted
+
+        Behavior on color {
+            ColorAnimation {
+                duration: CachyTheme.animFast
+                easing.type: Easing.OutCubic
+            }
+        }
     }
 
-    MouseArea {
-        id: area
-        anchors.fill: parent
-        hoverEnabled: true
-        acceptedButtons: Qt.LeftButton
-        onClicked: item.clicked()
-        onEntered: item.hovered()
+    HoverHandler {
+        id: hoverHandler
+        cursorShape: Qt.PointingHandCursor
+        onHoveredChanged: {
+            if (hovered) {
+                item.hovered();
+            }
+        }
+    }
+
+    TapHandler {
+        id: tapHandler
+        onTapped: item.clicked()
     }
 
     RowLayout {
         anchors.fill: parent
-        anchors.leftMargin: Kirigami.Units.smallSpacing * 2
-        anchors.rightMargin: Kirigami.Units.smallSpacing * 2
-        spacing: Kirigami.Units.smallSpacing
+        anchors.leftMargin: 14
+        anchors.rightMargin: 14
+        spacing: CachyTheme.spacingSmall
 
-        Label {
+        Text {
             id: label
             Layout.fillWidth: true
+            Layout.minimumWidth: 0
             verticalAlignment: Text.AlignVCenter
-            color: item.highlighted ? Kirigami.Theme.highlightedTextColor : Kirigami.Theme.textColor
+            color: item.highlighted ? "#FFFFFF" : CachyPalette.text
             elide: Text.ElideRight
-            font: Kirigami.Theme.defaultFont
+            font.pixelSize: 13
         }
 
-        Label {
+        Text {
             id: shortcutLabel
             text: item.shortcutText
             visible: item.shortcutText.length > 0
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignRight
-            color: item.highlighted 
-                   ? Kirigami.Theme.highlightedTextColor 
-                   : Kirigami.Theme.disabledTextColor
-            font: Kirigami.Theme.smallFont
-            opacity: item.highlighted ? 1.0 : 0.8
+            color: item.highlighted ? Qt.rgba(1, 1, 1, 0.85) : CachyPalette.textSecondary
+            font.pixelSize: 11
         }
     }
 }

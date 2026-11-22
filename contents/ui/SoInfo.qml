@@ -1,96 +1,135 @@
+/*
+ *  SPDX-FileCopyrightText: 2020 Kpple <info.kpple@gmail.com>
+ *  SPDX-FileCopyrightText: 2026 Cesar Conte
+ *  SPDX-License-Identifier: GPL-2.0-or-later
+ */
+
 import QtQuick
-import QtQuick.Controls
-import QtQuick.Layouts 1.1
-import org.kde.kcmutils // KCMLauncher
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.kirigami as Kirigami
+import QtQuick.Layouts
+import CachyOS.UI
 
-PlasmaCore.Dialog {
-    id: dialog
-    visible: true
-    width: 280
-    height: 400
-    //parent: root
-    //visible: false
-    location: PlasmaCore.Types.Floating
+CachyWindow {
+    id: aboutWindow
 
-    property var screen: root.screenGeometry;
-    hideOnWindowDeactivate: true
+    visible: false
+    width: 320
+    height: 440
+    minimumWidth: 300
+    minimumHeight: 400
+    maximumWidth: 360
+    maximumHeight: 480
+    closable: true
+    minimizable: false
+    maximizable: false
+    resizable: false
+    showTitleBarDivider: false
+    windowTitle: i18n("About This Computer")
 
-    x: (screen.width - width)/2
-    y: (screen.height - height)/2
+    x: Screen.width > 0 ? Math.round((Screen.width - width) / 2) : 100
+    y: Screen.height > 0 ? Math.round((Screen.height - height) / 2) : 100
+
+    signal moreInfoRequested()
+
+    Shortcut {
+        sequence: "Escape"
+        onActivated: aboutWindow.close()
+    }
 
     MainModel {
         id: mainModel
     }
 
-    FocusScope {
-        id: rootItem
-        Layout.minimumWidth:  280
-        Layout.maximumWidth:  280
-        Layout.minimumHeight: 450
-        Layout.maximumHeight: 450
-        focus: true
+    ColumnLayout {
+        anchors.fill: parent
+        anchors.margins: CachyTheme.marginWindow
+        anchors.topMargin: CachyTheme.titleBarHeight + CachyTheme.spacingSmall
+        spacing: CachyTheme.spacingMedium
 
-        Kirigami.Icon{
-            id: logo
-            source: "computer"
-            width: parent.width/2
-            height: width
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.top: parent.top
-            anchors.topMargin:  Kirigami.Units.gridUnit
+        // System / Hardware Logo
+        CachyIcon {
+            Layout.alignment: Qt.AlignHCenter
+            Layout.preferredWidth: 64
+            Layout.preferredHeight: 64
+            name: "computer"
+            size: 64
+            color: CachyTheme.accentColor
         }
-        Text {
-            id: hei
-            text: "prueba"
-            font: Kirigami.Theme.defaultFont
-            visible: false
-        }
-        ListView {
-            id: list
-            model: mainModel.infoModel
-            width: 250
-            height: (hei.implicitHeight + Kirigami.Units.gridUnit/3) * (mainModel.infoModel.count + 1 )
-            anchors.top: logo.bottom
-            anchors.topMargin: Kirigami.Units.gridUnit
-            delegate: Item {
-                id: item
-                width: parent.width
-                height: valueModel.implicitHeight + Kirigami.Units.gridUnit/3
-                Row {
-                    id: texts
-                    anchors.fill: parent
-                    Text {
-                        width: parent.width/2
-                        text: model.name + ": "
-                        color: Kirigami.Theme.textColor
-                        font: Kirigami.Theme.defaultFont
-                        horizontalAlignment: Text.AlignRight
-                    }
-                    Text {
-                        id: valueModel
-                        width: parent.width/2
-                        text: model.value
-                        font: Kirigami.Theme.defaultFont
-                        color: Kirigami.Theme.textColor
-                        wrapMode: Text.Wrap // Permite el salto de línea automático
-                        elide: Text.ElideNone
-                    }
-                }
 
+        // Title and OS Name
+        ColumnLayout {
+            Layout.fillWidth: true
+            Layout.minimumWidth: 0
+            spacing: CachyTheme.spacingTiny
+
+            Text {
+                Layout.fillWidth: true
+                Layout.minimumWidth: 0
+                horizontalAlignment: Text.AlignHCenter
+                text: CachyTheme.distroName.length > 0 ? CachyTheme.distroName : i18n("CachyOS")
+                font.pixelSize: 20
+                font.weight: Font.DemiBold
+                color: CachyPalette.text
+            }
+
+            Text {
+                Layout.fillWidth: true
+                Layout.minimumWidth: 0
+                horizontalAlignment: Text.AlignHCenter
+                text: mainModel.plasmaVersion.length > 0
+                    ? i18n("Plasma %1", mainModel.plasmaVersion)
+                    : CachyTheme.desktopShell
+                font.pixelSize: 12
+                color: CachyPalette.textSecondary
             }
         }
 
-        Button {
-            anchors.top: list.bottom
-            anchors.topMargin: Kirigami.Units.gridUnit*1.5
-            anchors.horizontalCenter: parent.horizontalCenter
-            text: i18n("More info...")
-            onClicked:  KCMLauncher.openSystemSettings("kcm_about-distro")
+        // Specifications List
+        ColumnLayout {
+            Layout.fillWidth: true
+            Layout.minimumWidth: 0
+            Layout.fillHeight: true
+            spacing: 6
+
+            Repeater {
+                model: mainModel.infoModel
+
+                RowLayout {
+                    id: specRow
+                    required property var model
+
+                    Layout.fillWidth: true
+                    Layout.minimumWidth: 0
+                    spacing: CachyTheme.spacingSmall
+
+                    Text {
+                        Layout.preferredWidth: 70
+                        Layout.minimumWidth: 0
+                        horizontalAlignment: Text.AlignRight
+                        text: specRow.model.name + ":"
+                        font.pixelSize: 11
+                        font.weight: Font.DemiBold
+                        color: CachyPalette.textSecondary
+                    }
+
+                    Text {
+                        Layout.fillWidth: true
+                        Layout.minimumWidth: 0
+                        text: specRow.model.value
+                        font.pixelSize: 11
+                        color: CachyPalette.text
+                        wrapMode: Text.WordWrap
+                        elide: Text.ElideNone
+                    }
+                }
+            }
         }
 
-
+        // Pill Button
+        CachyButton {
+            Layout.alignment: Qt.AlignHCenter
+            pillStyle: true
+            text: i18n("More info...")
+            onClicked: aboutWindow.moreInfoRequested()
+        }
     }
-
 }
